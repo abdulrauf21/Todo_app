@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/model/todo_model.dart';
 
 import 'addtask_screen.dart';
 
@@ -13,6 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _value = false;
   @override
   Widget build(BuildContext context) {
+    
     List noteslist = [
       {"date": "9 Sep 2022", "description": "Example tod..."},
       {"date": "8 Nov 2022", "description": "Example tod..."},
@@ -208,7 +210,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Stack(
               children: [
-
                 Container(
                   height: 65,
                   width: double.infinity,

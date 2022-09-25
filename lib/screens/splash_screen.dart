@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/home_screen.dart';
+import 'package:todo_app/screens/home_screen.dart';
+import 'package:todo_app/screens/login_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -64,7 +65,7 @@ class SplashScreen extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder:(context)=>HomeScreen(),),);
+                      Navigator.of(context).push(MaterialPageRoute(builder:(context)=>LoginScreen(),),);
                     },
                     style: ElevatedButton.styleFrom(
                       fixedSize: Size(150, 45),
