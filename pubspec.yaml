@@ -37,6 +37,7 @@ dependencies:
   cloud_firestore: ^3.4.9
   firebase_core: ^1.23.0
   provider: ^6.0.3
+  shared_preferences: ^2.0.15
   
 
 dev_dependencies:
