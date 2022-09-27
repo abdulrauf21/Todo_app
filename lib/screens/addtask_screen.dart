@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/controller/task_provider.dart';
+import 'package:todo_app/model/todo_model.dart';
 
 import 'edittask_screen.dart';
 import 'home_screen.dart';
@@ -42,11 +43,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       ),
                       InkWell(
                         onTap: (() {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => HomeScreen(),
-                            ),
-                          );
+                         Navigator.pop(context);
                         }),
                         child: Icon(
                           Icons.close,
@@ -158,17 +155,19 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   descriptionEditingController
                                       .text.isNotEmpty &&
                                   endDateEditingController.text.isNotEmpty) {
+                                TodoModel todoModel = TodoModel(
+                                  title: titleEditingController.text,
+                                  description:
+                                      descriptionEditingController.text,
+                                  endDate: endDateEditingController.text,
+                                  isDone: false,
+                                );
                                 Provider.of<TaskProvider>(context,
                                         listen: false)
-                                    .addTask(
-                                  titleEditingController.text,
-                                  descriptionEditingController.text,
-                                  endDateEditingController.text,
-                                )
+                                    .addTask(todoModel)
                                     .then(
                                   (value) {
                                     if (value == true) {
-
                                       final snackBar = SnackBar(
                                           content:
                                               Text("Task added successfully"));
