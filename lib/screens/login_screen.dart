@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 )
               ],
             ),
-            Provider.of<UserProvider>(context).isLoading
+            Provider.of<UserProvider>(context).isLoading == true
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
