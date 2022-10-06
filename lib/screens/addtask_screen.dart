@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/controller/task_provider.dart';
-import 'package:todo_app/model/todo_model.dart';
+// import 'package:todo_app/controller/task_provider.dart';
+// import 'package:todo_app/model/todo_model.dart';
 
 import 'edittask_screen.dart';
 import 'home_screen.dart';
@@ -151,45 +151,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              if (titleEditingController.text.isNotEmpty &&
-                                  descriptionEditingController
-                                      .text.isNotEmpty &&
-                                  endDateEditingController.text.isNotEmpty) {
-                                TodoModel todoModel = TodoModel(
-                                  title: titleEditingController.text,
-                                  description:
-                                      descriptionEditingController.text,
-                                  endDate: endDateEditingController.text,
-                                  isDone: false,
-                                );
-                                Provider.of<TaskProvider>(context,
-                                        listen: false)
-                                    .addTask(todoModel)
-                                    .then(
-                                  (value) {
-                                    if (value == true) {
-                                      final snackBar = SnackBar(
-                                          content:
-                                              Text("Task added successfully"));
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(snackBar);
-                                      titleEditingController.clear();
-                                      descriptionEditingController.clear();
-                                      endDateEditingController.clear();
-                                    } else {
-                                      final snackBar =
-                                          SnackBar(content: Text("Failed"));
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(snackBar);
-                                    }
-                                  },
-                                );
-                              } else {
-                                final snackBar = SnackBar(
-                                    content: Text("Please fill the form"));
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              }
+                              
                             },
                             style: ElevatedButton.styleFrom(
                               fixedSize: Size(106, 40),
@@ -251,11 +213,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ),
             ],
           ),
-          Provider.of<TaskProvider>(context).isLoading == true
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : SizedBox()
+       
         ],
       ),
     );

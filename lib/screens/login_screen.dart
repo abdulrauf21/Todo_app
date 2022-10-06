@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/controller/user_provider.dart';
 import 'package:todo_app/model/user_model.dart';
 import 'package:todo_app/screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -19,32 +17,112 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Login"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Stack(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+      body: Stack(
+        
+        children: [
+          Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: Color(0xff2DC369),
+            ),
+            child: Column(
               children: [
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                      hintText: "Enter your email", label: Text("Email")),
+                const SizedBox(
+                  height: 140,
                 ),
-                SizedBox(
-                  height: 20,
+                const Icon(
+                  Icons.account_circle,
+                  size: 100,
+                  color: Colors.white,
                 ),
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                      hintText: "Enter your password", label: Text("Password")),
+                const SizedBox(
+                  height: 25,
                 ),
-                SizedBox(
-                  height: 20,
+                Container(
+                  height: 47,
+                  width: 115,
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                    color: Colors.white10,
+                  ),
+                  child: const Text(
+                    "Login",
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xffffffff),
+                    ),
+                  ),
                 ),
+                const SizedBox(
+                  height: 25,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      label: Text(
+                        "Email",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      hintText: "Enter your email or username",
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: TextField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      label: Text(
+                        "Password",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      hintText: "Enter your password",
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     if (_emailController.text.isEmpty &&
+                //         _passwordController.text.isEmpty) {
+                //       final snackbar = SnackBar(
+                //         content: Text("Email or Password field is empty"),
+                //       );
+                //       ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                //     } else {
+                //       UserModel userModel = UserModel(
+                //           email: _emailController.text,
+                //           password: _passwordController.text);
+                //       Provider.of<UserProvider>(context, listen: false)
+                //           .login(userModel)
+                //           .then((value) {
+                //         if (value == true) {
+                //           Navigator.push(
+                //               context,
+                //               MaterialPageRoute(
+                //                   builder: (context) => HomeScreen()));
+                //         } else {
+                //           final snackbar = SnackBar(
+                //               content: Text("Email or password didn't matched"));
+                //           ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                //         }
+                //       });
+                //     }
+                //   },
+                //   child: const Text("Login"),
+                // ),
                 ElevatedButton(
                   onPressed: () {
                     if (_emailController.text.isNotEmpty &&
@@ -78,16 +156,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   },
                   child: Text("Login"),
-                )
-              ],
+            ),],
             ),
-            Provider.of<UserProvider>(context).isLoading == true
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : SizedBox(),
-          ],
-        ),
+          ),
+         Provider.of<UserProvider>(context).isLoading==true? Center(
+            child: CircularProgressIndicator(
+
+            ),
+          ): SizedBox(),
+        ],
       ),
     );
   }
