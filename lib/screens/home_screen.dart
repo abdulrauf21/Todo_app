@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/controller/task_provider.dart';
 import 'package:todo_app/model/todo_model.dart';
+import 'package:todo_app/screens/widgets/edit_task_widget.dart';
 
 import 'addtask_screen.dart';
 
@@ -22,17 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List noteslist = [
-      {"date": "9 Sep 2022", "description": "Example tod..."},
-      {"date": "8 Nov 2022", "description": "Example tod..."},
-      {"date": "6 Oct 2022", "description": "Example tod..."},
-      {"date": "19 Sep 2022", "description": "Example tod..."},
-      {"date": "5 May 2022", "description": "Example tod..."},
-      {"date": "8 Feb 2022", "description": "Example tod..."},
-      {"date": "23 Jan 2022", "description": "Example tod..."},
-      {"date": "6 Jun 2022", "description": "Example tod..."},
-      {"date": "21 Oct 2022", "description": "Example tod..."},
-    ];
     return Scaffold(
       body: Stack(
         children: [
@@ -67,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "8 Todos",
+                        "${Provider.of<TaskProvider>(context, listen: false).tasks?.length} task's",
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
@@ -132,68 +122,90 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Container(
                   height: 320,
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) {
-                      return SizedBox(height: 10);
-                    },
-                    shrinkWrap: true,
-                    itemCount:  Provider.of<TaskProvider>(context, listen: false).tasks.length,
-                    itemBuilder: (context, index) {
-                      TodoModel td = Provider.of<TaskProvider>(context, listen: false).tasks[index];
-                      return Container(
-                        margin: EdgeInsets.symmetric(horizontal: 18),
-                        padding: EdgeInsets.only(
-                          left: 19,
-                          right: 16,
-                          top: 16,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Checkbox(
-                              value: false,
-                              onChanged: (value) {
-                                setState(() {
-                                  value = _value;
-                                });
+                  child: Provider.of<TaskProvider>(context, listen: false)
+                              .tasks ==
+                          null
+                      ? SizedBox()
+                      : ListView.separated(
+                          separatorBuilder: (context, index) {
+                            return SizedBox(height: 10);
+                          },
+                          shrinkWrap: true,
+                          itemCount:
+                              Provider.of<TaskProvider>(context, listen: false)
+                                      .tasks
+                                      ?.length ??
+                                  0,
+                          itemBuilder: (context, index) {
+                            TodoModel td = Provider.of<TaskProvider>(context,
+                                    listen: false)
+                                .tasks![index];
+                            return InkWell(
+                              onTap: () {
+                                showEditTaskBottomSheet(context, td);
                               },
-                              activeColor: Colors.green,
-                            ),
-                            Text(
-                              td.endDate ?? "",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 16.0,
-                                color: Color(0xff222222),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 9,
-                            ),
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  td.title ?? "",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16.0,
-                                    color: Colors.black,
-                                  ),
+                              child: Container(
+                                margin: EdgeInsets.symmetric(horizontal: 18),
+                                padding: EdgeInsets.only(
+                                  left: 19,
+                                  right: 16,
+                                  top: 16,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Checkbox(
+                                      value: td.isDone,
+                                      onChanged: (value) {
+                                        // setState(() {
+                                        //   value = _value;
+                                        // });
+                                        td.isDone = value;
+                                        Provider.of<TaskProvider>(context,
+                                                listen: false)
+                                            .updateTask(td);
+                                        Provider.of<TaskProvider>(context,
+                                                listen: false)
+                                            .getTask();
+                                      },
+                                      activeColor: Colors.green,
+                                    ),
+                                    Text(
+                                      td.endDate ?? "",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16.0,
+                                        color: Color(0xff222222),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 9,
+                                    ),
+                                    Expanded(
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          td.title ?? "",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16.0,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                          ],
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
                 ),
                 TextButton(
                   style: TextButton.styleFrom(
@@ -262,3 +274,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+

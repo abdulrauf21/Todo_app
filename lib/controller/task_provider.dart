@@ -5,7 +5,7 @@ import 'package:todo_app/model/todo_model.dart';
 
 class TaskProvider extends ChangeNotifier {
   bool isLoading = false;
-  List<TodoModel> tasks = [];
+  List<TodoModel>? tasks;
   UserLocalDataSource userLocalDataSource = UserLocalDataSource();
   final FirebaseFirestore firebase = FirebaseFirestore.instance;
 
@@ -21,13 +21,6 @@ class TaskProvider extends ChangeNotifier {
       notifyListeners();
       await docRef.set(
         todoModel.toMap(),
-        // "dateCreated": DateTime.now(),
-        // "description": description,
-        // "isDone": false,
-        // "taskId": docRef.id,
-        // "title": title,
-        // "endDate": endDate,
-        // "userId": await userLocalDataSource.getUserId()
       );
       isLoading = false;
       notifyListeners();
@@ -48,15 +41,25 @@ class TaskProvider extends ChangeNotifier {
           .collection("todo")
           .where("userId", isEqualTo: userId)
           .get();
-      data.docs.forEach((element) {
-        TodoModel todo = TodoModel.fromJson(element.data());
-        tasks.add(todo);
-      });
+      List<TodoModel> todos =
+          List.from(data.docs.map((e) => TodoModel.fromJson(e.data())));
+      tasks = todos;
       isLoading = false;
       notifyListeners();
     } catch (e) {
       isLoading = false;
       notifyListeners();
+      throw e;
+    }
+  }
+
+  Future<void> updateTask(TodoModel todoModel) async {
+    try {
+      await firebase
+          .collection("todo")
+          .doc(todoModel.taskId)
+          .update(todoModel.toMap());
+    } catch (e) {
       throw e;
     }
   }
