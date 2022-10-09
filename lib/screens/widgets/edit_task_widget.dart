@@ -23,13 +23,15 @@ class EditTask extends StatefulWidget {
 class _EditTaskState extends State<EditTask> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController endDateController = TextEditingController();
+  
+  
+  DateTime? selectedEndDate;
 
   @override
   void initState() {
     titleController.text = widget.todoModel.title ?? "";
     descriptionController.text = widget.todoModel.description ?? "";
-    endDateController.text = widget.todoModel.endDate ?? "";
+    selectedEndDate = widget.todoModel.endDate;
     super.initState();
   }
 
@@ -104,15 +106,31 @@ class _EditTaskState extends State<EditTask> {
             SizedBox(
               height: 8,
             ),
-            TextField(
-              controller: endDateController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                hintText: 'Click here to choose date',
-              ),
-            ),
+            InkWell(
+                        onTap: () async{
+                          final datetime  = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2021),
+                            lastDate: DateTime(2025),
+                          );
+                          if(datetime != null) {
+                            setState(() {
+                              selectedEndDate = datetime;
+                            });
+                          }
+                        },
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          padding: const EdgeInsets.only(left: 15),
+                          height: 50,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(12)),
+                          child: selectedEndDate == null ? Text("Please tap to select end date") :  Text("${selectedEndDate!.year.toString()}/${selectedEndDate!.month.toString()}/${selectedEndDate!.day.toString()}"),
+                        ),
+                      ),
             SizedBox(
               height: 10,
             ),
@@ -121,7 +139,7 @@ class _EditTaskState extends State<EditTask> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    widget.todoModel.endDate = endDateController.text;
+                    widget.todoModel.endDate = selectedEndDate;
                     widget.todoModel.title = titleController.text;
                     widget.todoModel.description = descriptionController.text;
                     Provider.of<TaskProvider>(context, listen: false)

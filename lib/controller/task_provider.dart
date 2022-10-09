@@ -40,6 +40,7 @@ class TaskProvider extends ChangeNotifier {
       final data = await firebase
           .collection("todo")
           .where("userId", isEqualTo: userId)
+          .orderBy("dateCreated", descending: true)
           .get();
       List<TodoModel> todos =
           List.from(data.docs.map((e) => TodoModel.fromJson(e.data())));

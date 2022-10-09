@@ -17,8 +17,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   final TextEditingController titleEditingController = TextEditingController();
   final TextEditingController descriptionEditingController =
       TextEditingController();
-  final TextEditingController endDateEditingController =
-      TextEditingController();
+  DateTime? selectedEndDate;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +43,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         ),
                         InkWell(
                           onTap: (() {
-                           Navigator.pop(context);
+                            Navigator.pop(context);
                           }),
                           child: Icon(
                             Icons.close,
@@ -67,191 +66,155 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Container(
-                    alignment: Alignment.topLeft,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Title(
-                          color: Colors.black,
-                          child: Text(
-                            "Title",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Title(
+                        color: Colors.black,
+                        child: Text(
+                          "Title",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        SizedBox(
-                          height: 8,
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      TextField(
+                        controller: titleEditingController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          hintText: 'Enter task title',
                         ),
-                        TextField(
-                          controller: titleEditingController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            hintText: 'Enter task title',
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Title(
+                        color: Colors.black,
+                        child: Text(
+                          "Description",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        SizedBox(
-                          height: 10,
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      TextField(
+                        controller: descriptionEditingController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          hintText: 'Enter task description',
                         ),
-                        Title(
-                          color: Colors.black,
-                          child: Text(
-                            "Description",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Title(
+                        color: Colors.black,
+                        child: Text(
+                          "Date end",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        SizedBox(
-                          height: 8,
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      InkWell(
+                        onTap: () async{
+                          final datetime  = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2021),
+                            lastDate: DateTime(2025),
+                          );
+                          if(datetime != null) {
+                            setState(() {
+                              selectedEndDate = datetime;
+                            });
+                          }
+                        },
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          padding: const EdgeInsets.only(left: 15),
+                          height: 50,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(12)),
+                          child: selectedEndDate == null ? Text("Please tap to select end date") :  Text("${selectedEndDate!.year.toString()}/${selectedEndDate!.month.toString()}/${selectedEndDate!.day.toString()}"),
                         ),
-                        TextField(
-                          controller: descriptionEditingController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            hintText: 'Enter task description',
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Title(
-                          color: Colors.black,
-                          child: Text(
-                            "Date end",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        TextField(
-                          controller: endDateEditingController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            hintText: 'Click here to choose date',
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                if (titleEditingController.text.isNotEmpty &&
-                                    descriptionEditingController
-                                        .text.isNotEmpty &&
-                                    endDateEditingController.text.isNotEmpty) {
-                                  TodoModel todoModel = TodoModel(
-                                    title: titleEditingController.text,
-                                    description:
-                                        descriptionEditingController.text,
-                                    endDate: endDateEditingController.text,
-                                    isDone: false,
-                                  );
-                                  Provider.of<TaskProvider>(context,
-                                          listen: false)
-                                      .addTask(todoModel)
-                                      .then(
-                                    (value) {
-                                      if (value == true) {
-                                        final snackBar = SnackBar(
-                                            content:
-                                                Text("Task added successfully"));
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
-                                        titleEditingController.clear();
-                                        descriptionEditingController.clear();
-                                        endDateEditingController.clear();
-                                        Provider.of<TaskProvider>(context, listen: false).getTask();
-                                        Navigator.pop(context);
-                                      } else {
-                                        final snackBar =
-                                            SnackBar(content: Text("Failed"));
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
-                                      }
-                                    },
-                                  );
-                                } else {
-                                  final snackBar = SnackBar(
-                                      content: Text("Please fill the form"));
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                fixedSize: Size(106, 40),
-                                primary: Color(0xff1AB8DB),
-                                shape: StadiumBorder(),
-                              ),
-                              child: Text(
-                                "Add",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => EditTaskScreen(),
-                                  ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                fixedSize: Size(106, 40),
-                                primary: Color(0xff1AB8DB),
-                                shape: StadiumBorder(),
-                              ),
-                              child: Text(
-                                "Edit",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => HomeScreen(),
-                                  ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                fixedSize: Size(106, 40),
-                                primary: Color.fromARGB(255, 243, 31, 31),
-                                shape: StadiumBorder(),
-                              ),
-                              child: Text(
-                                "Cancel",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
                   ),
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (titleEditingController.text.isNotEmpty &&
+                        descriptionEditingController.text.isNotEmpty &&
+                        selectedEndDate != null
+                        ) {
+                      TodoModel todoModel = TodoModel(
+                        title: titleEditingController.text,
+                        description: descriptionEditingController.text,
+                        endDate: selectedEndDate,
+                        isDone: false,
+                      );
+                      Provider.of<TaskProvider>(context, listen: false)
+                          .addTask(todoModel)
+                          .then(
+                        (value) {
+                          if (value == true) {
+                            final snackBar = SnackBar(
+                                content: Text("Task added successfully"));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            titleEditingController.clear();
+                            descriptionEditingController.clear();
+                            selectedEndDate = null;
+                            Provider.of<TaskProvider>(context, listen: false)
+                                .getTask();
+                            Navigator.pop(context);
+                          } else {
+                            final snackBar = SnackBar(content: Text("Failed"));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }
+                        },
+                      );
+                    } else {
+                      final snackBar =
+                          SnackBar(content: Text("Please fill the form"));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: Size(106, 40),
+                    primary: Color(0xff1AB8DB),
+                    shape: StadiumBorder(),
+                  ),
+                  child: Text(
+                    "Add",
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                )
               ],
             ),
           ),
