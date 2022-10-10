@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/controller/auth_provider.dart';
 import 'package:todo_app/controller/user_provider.dart';
 import 'package:todo_app/model/user_model.dart';
 import 'package:todo_app/screens/home_screen.dart';
+import 'package:todo_app/screens/sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -49,39 +51,40 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     if (_emailController.text.isNotEmpty &&
                         _passwordController.text.isNotEmpty) {
-                      UserModel userModel = UserModel(
-                        email: _emailController.text,
-                        password: _passwordController.text,
-                      );
-                      Provider.of<UserProvider>(context, listen: false)
-                          .login(userModel)
+                      Provider.of<AuthProvider>(context, listen: false)
+                          .signInWithEmailAndPassword(_emailController.text,
+                              _passwordController.text, context)
                           .then((value) {
                         if (value == true) {
                           _emailController.clear();
                           _passwordController.clear();
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen()));
-                        } else {
-                          final snackBar = SnackBar(
-                              content:
-                                  Text("Email and password did not match !!"));
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomeScreen(),
+                            ),
+                          );
                         }
                       });
                     } else {
-                      final snackBar = SnackBar(
-                          content: Text(
-                              "Email and password is Empty. Please fill!!"));
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      final snackbar = SnackBar(
+                          content: Text("Email and password are required"));
+                      ScaffoldMessenger.of(context).showSnackBar(snackbar);
                     }
                   },
                   child: Text("Login"),
+                ),
+                Text("Or"),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => SignUpScreen()));
+                  },
+                  child: Text("Sign Up"),
                 )
               ],
             ),
-            Provider.of<UserProvider>(context).isLoading
+            Provider.of<AuthProvider>(context).isLoading == true
                 ? Center(
                     child: CircularProgressIndicator(),
                   )

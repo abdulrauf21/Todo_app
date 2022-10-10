@@ -38,6 +38,7 @@ dependencies:
   firebase_core: ^1.23.0
   provider: ^6.0.3
   shared_preferences: ^2.0.15
+  firebase_auth: ^3.11.2
   
 
 dev_dependencies:
