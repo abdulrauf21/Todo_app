@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:todo_app/screens/home_screen.dart';
-
 import 'login_screen.dart';
 
 class SplashScreen extends StatelessWidget {

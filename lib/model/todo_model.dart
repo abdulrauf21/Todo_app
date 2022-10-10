@@ -3,11 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TodoModel {
   String? userId;
-   String? title;
+  String? title;
   String? description;
   bool? isDone;
   DateTime? dateCreated;
-  String? endDate;
+  DateTime? endDate;
   String? taskId;
   TodoModel({
     this.userId,
@@ -24,7 +24,7 @@ class TodoModel {
     description = jsondata["description"];
     isDone = jsondata["isDone"];
     dateCreated = (jsondata["dateCreated"] as Timestamp).toDate();
-    endDate = jsondata["endDate"];
+    endDate = (jsondata["endDate"] as Timestamp).toDate();
     taskId = jsondata["taskId"];
   }
 

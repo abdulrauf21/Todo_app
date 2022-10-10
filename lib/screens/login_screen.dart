@@ -18,7 +18,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
-        
         children: [
           Container(
             width: double.infinity,
@@ -93,36 +92,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                // ElevatedButton(
-                //   onPressed: () {
-                //     if (_emailController.text.isEmpty &&
-                //         _passwordController.text.isEmpty) {
-                //       final snackbar = SnackBar(
-                //         content: Text("Email or Password field is empty"),
-                //       );
-                //       ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                //     } else {
-                //       UserModel userModel = UserModel(
-                //           email: _emailController.text,
-                //           password: _passwordController.text);
-                //       Provider.of<UserProvider>(context, listen: false)
-                //           .login(userModel)
-                //           .then((value) {
-                //         if (value == true) {
-                //           Navigator.push(
-                //               context,
-                //               MaterialPageRoute(
-                //                   builder: (context) => HomeScreen()));
-                //         } else {
-                //           final snackbar = SnackBar(
-                //               content: Text("Email or password didn't matched"));
-                //           ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                //         }
-                //       });
-                //     }
-                //   },
-                //   child: const Text("Login"),
-                // ),
                 ElevatedButton(
                   onPressed: () {
                     if (_emailController.text.isNotEmpty &&
@@ -156,14 +125,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   },
                   child: Text("Login"),
-            ),],
+                ),
+              ],
             ),
           ),
-         Provider.of<UserProvider>(context).isLoading==true? Center(
-            child: CircularProgressIndicator(
-
-            ),
-          ): SizedBox(),
+          Provider.of<UserProvider>(context).isLoading == true
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SizedBox(),
         ],
       ),
     );
