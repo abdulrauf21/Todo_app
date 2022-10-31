@@ -24,7 +24,6 @@ class AuthProvider extends ChangeNotifier {
       await saveUserInfoIntoDatabase(_email, uId);
       isLoading = false;
       notifyListeners();
-      
     } on FirebaseAuthException catch (e) {
       isLoading = false;
       notifyListeners();
@@ -54,7 +53,8 @@ class AuthProvider extends ChangeNotifier {
           email: email, password: password);
       isLoading = false;
       notifyListeners();
-      await userLocalDataSource.saveUserId(result.user!.uid); 
+      await userLocalDataSource.saveUserId(result.user!.uid);
+      await userLocalDataSource.saveUserLoggedIn(true);
       return true;
     } on FirebaseAuthException catch (e) {
       isLoading = false;
@@ -76,6 +76,11 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  Future<void> signOut() async {
+    await userLocalDataSource.saveUserLoggedIn(false);
+    await _firebaseAuth.signOut();
   }
 
   // to store siggend up user into firebase database in the collection [users]

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/controller/task_provider.dart';
 import 'package:todo_app/model/todo_model.dart';
+import 'package:todo_app/screens/splash_screen.dart';
 import 'package:todo_app/screens/widgets/edit_task_widget.dart';
 
+import '../controller/auth_provider.dart';
 import 'addtask_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,11 +33,25 @@ class _HomeScreenState extends State<HomeScreen> {
               Stack(
                 children: [
                   Container(
+                    alignment: Alignment.bottomRight,
                     height: 80,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Color.fromARGB(255, 62, 20, 5),
                       //  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15),),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        Provider.of<AuthProvider>(context, listen: false).signOut().then((value) {
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SplashScreen()), (route) => false);
+                        }
+
+                        );
+                      },
+                      icon: Icon(
+                        Icons.logout_outlined,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -121,15 +137,17 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Expanded(
                 child: Provider.of<TaskProvider>(context, listen: false)
-                            .tasks ==
-                        null || Provider.of<TaskProvider>(context, listen: false)
-                            .tasks!.isEmpty
+                                .tasks ==
+                            null ||
+                        Provider.of<TaskProvider>(context, listen: false)
+                            .tasks!
+                            .isEmpty
                     ? Center(
-                      child: Text(
+                        child: Text(
                           "No task found",
                           style: TextStyle(color: Colors.black),
                         ),
-                    )
+                      )
                     : ListView.separated(
                         padding: EdgeInsets.zero,
                         separatorBuilder: (context, index) {
@@ -182,11 +200,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Text(
                                       td.title ?? "",
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 16.0,
-                                        color: Colors.black,
-                                        decoration: td.isDone == true ? TextDecoration.lineThrough : null
-                                      ),
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16.0,
+                                          color: Colors.black,
+                                          decoration: td.isDone == true
+                                              ? TextDecoration.lineThrough
+                                              : null),
                                     ),
                                   ),
                                   SizedBox(
@@ -200,7 +219,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       color: Color(0xff222222),
                                     ),
                                   ),
-                                  
                                   SizedBox(
                                     height: 20,
                                   ),

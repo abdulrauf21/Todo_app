@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/controller/auth_provider.dart';
 import 'package:todo_app/controller/task_provider.dart';
 import 'package:todo_app/controller/user_provider.dart';
+import 'package:todo_app/local_data_source/user_local_data_source.dart';
+import 'package:todo_app/screens/home_screen.dart';
 import 'package:todo_app/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -31,8 +33,31 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const SplashScreen(),
+        home: Navigation()
       ),
+    );
+  }
+}
+
+class Navigation extends StatelessWidget {
+  Navigation({Key? key}) : super(key: key);
+  final UserLocalDataSource userLocalDataSource = UserLocalDataSource();
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: userLocalDataSource.getUserLoggedIn(),
+      builder: (ctx, snapshot) {
+        if (snapshot.hasData) {
+          final result = snapshot.data as bool;
+          if (result == true) {
+            return HomeScreen();
+          } else {
+            return SplashScreen();
+          }
+        } else {
+          return SplashScreen();
+        }
+      },
     );
   }
 }
